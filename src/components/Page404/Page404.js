@@ -9,9 +9,6 @@ export default function Page404(props) {
         <h1>Page not found</h1>
         <p>
           <Link to={"/"}>
-            {/* <button type="button" class="btn btn-success">
-              Go Back
-            </button> */}
             <Button href="#text-buttons" color="primary">
               Go Back
             </Button>

@@ -5,17 +5,21 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
+import HomeIcon from "@material-ui/icons/Home";
 import Backdrop from "@material-ui/core/Backdrop";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import clsx from "clsx";
+import Card from "react-bootstrap/Card";
+import Badge from "react-bootstrap/Badge";
+import { Link } from "react-router-dom";
 import * as handlers from "../../utils/handlers";
 import Notification from "../Notification/Notification";
 import { covidDataAPI } from "../../api/covid";
+import AboutApp from "../AboutApp/AboutApp";
 import _ from "lodash";
 import moment from "moment";
 
@@ -42,18 +46,6 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
-  totalCases: {
-    backgroundColor: "#42a5f5",
-  },
-  recoveredCases: {
-    backgroundColor: "#4caf50",
-  },
-  deathCases: {
-    backgroundColor: "#dd2c00",
-  },
-  activeCases: {
-    backgroundColor: "#e65100",
-  },
   atBottom: {
     position: "fixed",
     bottom: 0,
@@ -65,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DashBoard() {
+export default function DashBoard(props) {
+  const { statesView } = props;
   const classes = useStyles();
 
   const { loaderOpen, setLoaderOpen } = handlers.useLoader();
@@ -121,103 +114,177 @@ export default function DashBoard() {
     covidDataLoading,
   ]);
   handleLoader(showCovidDataLoading);
+  const cardColors = [
+    "Primary",
+    "Secondary",
+    "Success",
+    "Danger",
+    "Warning",
+    "Info",
+    "Light",
+    "Dark",
+  ];
 
   return (
     <React.Fragment>
       <div className={clsx(classes.root)} style={{ width: "100%" }}>
         <AppBar position="static">
           <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
+              <Link to={"/"} style={{ color: "white" }}>
+                <HomeIcon />
+              </Link>
+            </IconButton>
             <Typography variant="h6" className={classes.title} align="center">
-              Covid-19 India Statistics
+              {`Covid-19 India ${statesView ? "State Wise" : ""} Statistics`}
             </Typography>
-            <Button color="inherit">State wise</Button>
+            {!statesView && (
+              <Link to={"/states"} style={{ color: "red" }}>
+                <LocationOnIcon />
+              </Link>
+            )}
           </Toolbar>
         </AppBar>
-        <Box
-          display="flex"
-          p={1}
-          bgcolor="background.paper"
-          className={clsx(classes.mt)}
-        >
-          <Card className={clsx(classes.root, classes.totalCases)}>
-            <CardActionArea>
-              <CardContent align="center">
-                <Typography gutterBottom variant="h3" component="h1">
-                  {_.get(covidData, "totalCases", 0).toLocaleString("en-IN")}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  component="span"
+        {statesView && (
+          <div>
+            {/* <Box display="flex" p={1} bgcolor="background.paper"> */}
+            {_.get(covidData, "regionData", []).map((item, index) => {
+              return (
+                <Card
+                  bg="primary"
+                  key={1}
+                  text={"white"}
+                  style={{
+                    marginLeft: "60px",
+                    float: "left",
+                    marginTop: "5px",
+                    width: "25rem",
+                    height: "150px",
+                  }}
                 >
-                  Total Cases
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+                  <Card.Header align="center">{item.region}</Card.Header>
+                  <Card.Body>
+                    <Card.Title>
+                      <Card.Text align="center">
+                        <Badge pill variant="danger">
+                          Total Cases: {item.totalCases}
+                        </Badge>{" "}
+                        <Badge pill variant="danger">
+                          Total Infected: {item.totalInfected}
+                        </Badge>{" "}
+                        <Badge pill variant="danger">
+                          Total Deceased: {item.deceased}
+                        </Badge>{" "}
+                        <Badge pill variant="danger">
+                          Total Recovered: {item.recovered}
+                        </Badge>{" "}
+                      </Card.Text>
+                    </Card.Title>
+                  </Card.Body>
+                </Card>
+              );
+            })}
+            {/* </Box>{" "} */}
+          </div>
+        )}
+        {!statesView && (
+          <>
+            <Box display="flex" p={1} bgcolor="background.paper">
+              <Card
+                bg="primary"
+                key={1}
+                text={"white"}
+                style={{ width: "25rem", marginLeft: "5px" }}
+              >
+                <Card.Header align="center">Total Cases</Card.Header>
+                <Card.Body>
+                  <Card.Title>
+                    <Card.Text align="center">
+                      <h1>
+                        {_.get(covidData, "totalCases", 0).toLocaleString(
+                          "en-IN"
+                        )}
+                      </h1>
+                    </Card.Text>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
 
-          <Card className={clsx(classes.root, classes.ml, classes.activeCases)}>
-            <CardActionArea>
-              <CardContent align="center">
-                <Typography gutterBottom variant="h3" component="h1">
-                  {_.get(covidData, "activeCases", 0).toLocaleString("en-IN")}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  component="span"
-                >
-                  Active Cases
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+              <Card
+                bg="info"
+                key={2}
+                text={"white"}
+                style={{ width: "25rem", marginLeft: "5px" }}
+              >
+                <Card.Header align="center">Active Cases</Card.Header>
+                <Card.Body>
+                  <Card.Title>
+                    <Card.Text align="center">
+                      <h1>
+                        {_.get(covidData, "activeCases", 0).toLocaleString(
+                          "en-IN"
+                        )}
+                      </h1>
+                    </Card.Text>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
 
-          <Card
-            className={clsx(classes.root, classes.ml, classes.recoveredCases)}
-          >
-            <CardActionArea>
-              <CardContent align="center">
-                <Typography gutterBottom variant="h3" component="h1">
-                  {_.get(covidData, "recovered", 0).toLocaleString("en-IN")}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  component="span"
-                >
-                  Recovered
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+              <Card
+                bg="success"
+                key={3}
+                text={"white"}
+                style={{ width: "25rem", marginLeft: "5px" }}
+              >
+                <Card.Header align="center">Recovered Cases</Card.Header>
+                <Card.Body>
+                  <Card.Title>
+                    <Card.Text align="center">
+                      <h1>
+                        {_.get(covidData, "recovered", 0).toLocaleString(
+                          "en-IN"
+                        )}
+                      </h1>
+                    </Card.Text>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
 
-          <Card className={clsx(classes.root, classes.ml, classes.deathCases)}>
-            <CardActionArea>
-              <CardContent align="center">
-                <Typography gutterBottom variant="h3" component="h1">
-                  {_.get(covidData, "deaths", 0).toLocaleString("en-IN")}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  component="span"
-                >
-                  Deaths
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Box>
-        <Button
-          variant="contained"
-          color="primary"
-          className={clsx(classes.button, classes.refreshButton)}
-          endIcon={<RefreshIcon>refresh</RefreshIcon>}
-          onClick={covidDataAPIExec}
-        >
-          Refresh
-        </Button>
+              <Card
+                bg="danger"
+                key={4}
+                text={"white"}
+                style={{ width: "25rem", marginLeft: "5px" }}
+              >
+                <Card.Header align="center">Deaths</Card.Header>
+                <Card.Body>
+                  <Card.Title>
+                    <Card.Text align="center">
+                      <h1>
+                        {_.get(covidData, "deaths", 0).toLocaleString("en-IN")}
+                      </h1>
+                    </Card.Text>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+            </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              className={clsx(classes.button, classes.refreshButton)}
+              endIcon={<RefreshIcon>refresh</RefreshIcon>}
+              onClick={covidDataAPIExec}
+            >
+              Refresh
+            </Button>{" "}
+          </>
+        )}
+
         <Backdrop className={classes.backdrop} open={loaderOpen}>
           <CircularProgress color="inherit" />
         </Backdrop>
@@ -227,31 +294,37 @@ export default function DashBoard() {
           successNotificationMessage={successNotificationMessage}
           failureNotificationMessage={failureNotificationMessage}
         />
-        <div className={clsx(classes.atBottom)} style={{ width: "98.8%" }}>
-          <AppBar position="static">
-            <Toolbar>
-              <Button color="inherit">
-                {_.get(covidData, "lastUpdatedAtApify") &&
-                  `Last updated: ${moment(
-                    _.get(covidData, "lastUpdatedAtApify")
-                  ).format("MM/DD/YYYY hh:mm:ss A")} `}
-              </Button>
-              <Typography variant="h6" className={classes.title} align="center">
-                Data Source:{" "}
-                <a
-                  href="https://apify.com/covid-19"
-                  // eslint-disable-next-line react/jsx-no-target-blank
-                  target="_blank"
-                  style={{ color: "#fff" }}
+        {!statesView && (
+          <div className={clsx(classes.atBottom)} style={{ width: "100%" }}>
+            <AppBar position="static">
+              <Toolbar>
+                <Button color="inherit">
+                  {_.get(covidData, "lastUpdatedAtApify") &&
+                    `Last updated: ${moment(
+                      _.get(covidData, "lastUpdatedAtApify")
+                    ).format("MM/DD/YYYY hh:mm:ss A")} `}
+                </Button>
+                <Typography
+                  variant="h6"
+                  className={classes.title}
+                  align="center"
                 >
-                  https://apify.com/covid-19
-                </a>
-              </Typography>
-            </Toolbar>
-          </AppBar>
-        </div>
+                  Data Source:{" "}
+                  <a
+                    href="https://apify.com/covid-19"
+                    // eslint-disable-next-line react/jsx-no-target-blank
+                    target="_blank"
+                    style={{ color: "#fff" }}
+                  >
+                    https://apify.com/covid-19
+                  </a>
+                </Typography>
+                <AboutApp />
+              </Toolbar>
+            </AppBar>
+          </div>
+        )}
       </div>
-      <br />
     </React.Fragment>
   );
 }
