@@ -10,6 +10,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 import Backdrop from "@material-ui/core/Backdrop";
+import RefreshIcon from "@material-ui/icons/Refresh";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import clsx from "clsx";
 import * as handlers from "../../utils/handlers";
@@ -54,12 +55,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#e65100",
   },
   atBottom: {
-    // height: 40,
     position: "fixed",
     bottom: 0,
-
-    // backgroundColor: "#393838",
     opacity: 1,
+  },
+  refreshButton: {
+    float: "right",
+    marginRight: theme.spacing(),
   },
 }));
 
@@ -207,6 +209,15 @@ export default function DashBoard() {
             </CardActionArea>
           </Card>
         </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          className={clsx(classes.button, classes.refreshButton)}
+          endIcon={<RefreshIcon>refresh</RefreshIcon>}
+          onClick={covidDataAPIExec}
+        >
+          Refresh
+        </Button>
         <Backdrop className={classes.backdrop} open={loaderOpen}>
           <CircularProgress color="inherit" />
         </Backdrop>
