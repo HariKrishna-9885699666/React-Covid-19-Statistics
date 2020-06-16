@@ -114,16 +114,16 @@ export default function DashBoard(props) {
     covidDataLoading,
   ]);
   handleLoader(showCovidDataLoading);
-  const cardColors = [
-    "Primary",
-    "Secondary",
-    "Success",
-    "Danger",
-    "Warning",
-    "Info",
-    "Light",
-    "Dark",
-  ];
+
+
+
+
+
+ 
+
+
+
+
 
   return (
     <React.Fragment>
