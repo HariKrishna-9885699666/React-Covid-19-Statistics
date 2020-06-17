@@ -121,7 +121,7 @@ export default function DashBoard(props) {
             <Typography variant="h6" className={classes.title} align="center">
               <HomeIcon />
               <span
-                style={{ marginLeft: "10px", fontSize: "15px" }}
+                style={{ marginLeft: "10px", fontSize: "13px" }}
               >{`Covid-19 India ${
                 statesView ? "State Wise" : ""
               } Statistics`}</span>
