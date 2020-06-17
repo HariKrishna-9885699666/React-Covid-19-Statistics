@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import DashBoard from "./components/DashBoard/DashBoard";
 import Page404 from "./components/Page404/Page404";
+import AboutApp from "./components/AboutApp/AboutApp";
 
 export default function App(props) {
   return (
@@ -25,6 +26,7 @@ export default function App(props) {
           <Route path="*" component={Page404} />
         </Switch>
       </Router>
+      <AboutApp />
     </>
   );
 }

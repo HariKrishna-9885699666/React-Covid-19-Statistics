@@ -38,9 +38,9 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 200,
   },
   fab: {
-    position: "absolute",
     bottom: theme.spacing(2),
     right: theme.spacing(2),
+    position: "fixed",
   },
   fabGreen: {
     color: theme.palette.common.white,
@@ -177,7 +177,12 @@ function AboutApp() {
                       </ListItemIcon>
                       <ListItemText primary="Material UI" />
                     </ListItem>
-
+                    <ListItem button>
+                      <ListItemIcon>
+                        <CardGiftcardIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="BootStrap" />
+                    </ListItem>
                     <ListItem button>
                       <ListItemIcon>
                         <CardGiftcardIcon />

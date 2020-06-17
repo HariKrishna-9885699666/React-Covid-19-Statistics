@@ -1,25 +1,23 @@
 import React, { useMemo, useCallback, useEffect } from "react";
 import useAsync from "react-use-async-hook";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import Backdrop from "@material-ui/core/Backdrop";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import clsx from "clsx";
 import Card from "react-bootstrap/Card";
+import CardDeck from "react-bootstrap/CardDeck";
 import Badge from "react-bootstrap/Badge";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import * as handlers from "../../utils/handlers";
 import Notification from "../Notification/Notification";
 import { covidDataAPI } from "../../api/covid";
-import AboutApp from "../AboutApp/AboutApp";
 import _ from "lodash";
 import moment from "moment";
 
@@ -35,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    color: "white",
   },
   media: {
     height: 140,
@@ -45,11 +44,6 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
-  },
-  atBottom: {
-    position: "fixed",
-    bottom: 0,
-    opacity: 1,
   },
   refreshButton: {
     float: "right",
@@ -115,91 +109,188 @@ export default function DashBoard(props) {
   ]);
   handleLoader(showCovidDataLoading);
 
-
-
-
-
- 
-
-
-
-
+  const stateWiseDataCount = _.get(covidData, "regionData", []).length;
+  const loopCount = Math.ceil(stateWiseDataCount / 3);
+  let loopIndex = 0;
 
   return (
     <React.Fragment>
       <div className={clsx(classes.root)} style={{ width: "100%" }}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <Link to={"/"} style={{ color: "white" }}>
-                <HomeIcon />
-              </Link>
-            </IconButton>
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+          <Link to={"/"} style={{ color: "white" }}>
             <Typography variant="h6" className={classes.title} align="center">
-              {`Covid-19 India ${statesView ? "State Wise" : ""} Statistics`}
+              <HomeIcon />
+              <span
+                style={{ marginLeft: "10px", fontSize: "15px" }}
+              >{`Covid-19 India ${
+                statesView ? "State Wise" : ""
+              } Statistics`}</span>
             </Typography>
+          </Link>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto"></Nav>
+            <Nav style={{ marginRight: "10px" }}>
+              <Navbar.Collapse className="justify-content-end">
+                <Navbar.Text>
+                  <Badge pill variant="danger">
+                    {_.get(covidData, "lastUpdatedAtApify") &&
+                      `Last updated: ${moment(
+                        _.get(covidData, "lastUpdatedAtApify")
+                      ).format("MM/DD/YYYY hh:mm:ss A")} `}
+                  </Badge>
+                  <Badge pill variant="success">
+                    Data Source:{" "}
+                    <a
+                      href="https://apify.com/covid-19"
+                      // eslint-disable-next-line react/jsx-no-target-blank
+                      target="_blank"
+                      style={{ color: "#fff" }}
+                    >
+                      https://apify.com/covid-19
+                    </a>
+                  </Badge>
+                </Navbar.Text>
+              </Navbar.Collapse>
+            </Nav>
             {!statesView && (
-              <Link to={"/states"} style={{ color: "red" }}>
-                <LocationOnIcon />
-              </Link>
+              <Form inline>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={clsx(classes.button, classes.refreshButton)}
+                >
+                  <Link to={"/states"} style={{ color: "white" }}>
+                    State wise
+                  </Link>
+                </Button>
+              </Form>
             )}
-          </Toolbar>
-        </AppBar>
+          </Navbar.Collapse>
+        </Navbar>
+
         {statesView && (
           <div>
-            {/* <Box display="flex" p={1} bgcolor="background.paper"> */}
-            {_.get(covidData, "regionData", []).map((item, index) => {
-              return (
-                <Card
-                  bg="primary"
-                  key={1}
-                  text={"white"}
-                  style={{
-                    marginLeft: "60px",
-                    float: "left",
-                    marginTop: "5px",
-                    width: "25rem",
-                    height: "150px",
-                  }}
-                >
-                  <Card.Header align="center">{item.region}</Card.Header>
-                  <Card.Body>
-                    <Card.Title>
-                      <Card.Text align="center">
-                        <Badge pill variant="danger">
-                          Total Cases: {item.totalCases}
-                        </Badge>{" "}
-                        <Badge pill variant="danger">
-                          Total Infected: {item.totalInfected}
-                        </Badge>{" "}
-                        <Badge pill variant="danger">
-                          Total Deceased: {item.deceased}
-                        </Badge>{" "}
-                        <Badge pill variant="danger">
-                          Total Recovered: {item.recovered}
-                        </Badge>{" "}
-                      </Card.Text>
-                    </Card.Title>
-                  </Card.Body>
-                </Card>
-              );
-            })}
-            {/* </Box>{" "} */}
+            {Array(loopCount)
+              .fill()
+              .map((item, index) => {
+                const renderContent = (
+                  <>
+                    <CardDeck style={{ width: "100%" }}>
+                      <Card style={{ marginTop: "5px" }}>
+                        <Card.Img
+                          variant="top"
+                          src="../covid.png"
+                          style={{ height: "250px" }}
+                        />
+                        <Card.Body>
+                          <Card.Title style={{ color: "blue" }}>
+                            {covidData.regionData[loopIndex].region}
+                          </Card.Title>
+                          <Card.Text>
+                            <Badge pill variant="danger">
+                              Total Cases:{" "}
+                              {covidData.regionData[loopIndex].totalCases}
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Infected:{" "}
+                              {covidData.regionData[loopIndex].totalInfected}
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Deceased:{" "}
+                              {covidData.regionData[loopIndex].deceased}
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Recovered:{" "}
+                              {covidData.regionData[loopIndex].recovered}
+                            </Badge>{" "}
+                          </Card.Text>
+                        </Card.Body>
+                      </Card>
+                      <Card style={{ marginTop: "5px" }}>
+                        <Card.Img
+                          variant="top"
+                          src="../covid.png"
+                          style={{ height: "250px" }}
+                        />
+                        <Card.Body>
+                          <Card.Title style={{ color: "blue" }}>
+                            {covidData.regionData[loopIndex + 1].region}
+                          </Card.Title>
+                          <Card.Text>
+                            <Badge pill variant="danger">
+                              Total Cases:{" "}
+                              {covidData.regionData[loopIndex + 1].totalCases}
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Infected:{" "}
+                              {
+                                covidData.regionData[loopIndex + 1]
+                                  .totalInfected
+                              }
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Deceased:{" "}
+                              {covidData.regionData[loopIndex + 1].deceased}
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Recovered:{" "}
+                              {covidData.regionData[loopIndex + 1].recovered}
+                            </Badge>{" "}
+                          </Card.Text>
+                        </Card.Body>
+                      </Card>
+                      <Card style={{ marginTop: "5px" }}>
+                        <Card.Img
+                          variant="top"
+                          src="../covid.png"
+                          style={{ height: "250px" }}
+                        />
+                        <Card.Body>
+                          <Card.Title style={{ color: "blue" }}>
+                            {covidData.regionData[loopIndex + 2].region}
+                          </Card.Title>
+                          <Card.Text>
+                            <Badge pill variant="danger">
+                              Total Cases:{" "}
+                              {covidData.regionData[loopIndex + 2].totalCases}
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Infected:{" "}
+                              {
+                                covidData.regionData[loopIndex + 2]
+                                  .totalInfected
+                              }
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Deceased:{" "}
+                              {covidData.regionData[loopIndex + 2].deceased}
+                            </Badge>{" "}
+                            <Badge pill variant="danger">
+                              Total Recovered:{" "}
+                              {covidData.regionData[loopIndex + 2].recovered}
+                            </Badge>{" "}
+                          </Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </CardDeck>
+                  </>
+                );
+
+                loopIndex = loopIndex + 3;
+                return renderContent;
+              })}
           </div>
         )}
         {!statesView && (
           <>
-            <Box display="flex" p={1} bgcolor="background.paper">
+            <CardDeck style={{ width: "100%", marginLeft: "0px" }}>
               <Card
                 bg="primary"
                 key={1}
                 text={"white"}
-                style={{ width: "25rem", marginLeft: "5px" }}
+                style={{ width: "25rem", marginTop: "5px" }}
               >
                 <Card.Header align="center">Total Cases</Card.Header>
                 <Card.Body>
@@ -214,12 +305,11 @@ export default function DashBoard(props) {
                   </Card.Title>
                 </Card.Body>
               </Card>
-
               <Card
                 bg="info"
                 key={2}
                 text={"white"}
-                style={{ width: "25rem", marginLeft: "5px" }}
+                style={{ width: "25rem", marginTop: "5px" }}
               >
                 <Card.Header align="center">Active Cases</Card.Header>
                 <Card.Body>
@@ -234,12 +324,11 @@ export default function DashBoard(props) {
                   </Card.Title>
                 </Card.Body>
               </Card>
-
               <Card
                 bg="success"
                 key={3}
                 text={"white"}
-                style={{ width: "25rem", marginLeft: "5px" }}
+                style={{ width: "25rem", marginTop: "5px" }}
               >
                 <Card.Header align="center">Recovered Cases</Card.Header>
                 <Card.Body>
@@ -254,12 +343,11 @@ export default function DashBoard(props) {
                   </Card.Title>
                 </Card.Body>
               </Card>
-
               <Card
                 bg="danger"
                 key={4}
                 text={"white"}
-                style={{ width: "25rem", marginLeft: "5px" }}
+                style={{ width: "25rem", marginTop: "5px" }}
               >
                 <Card.Header align="center">Deaths</Card.Header>
                 <Card.Body>
@@ -272,13 +360,14 @@ export default function DashBoard(props) {
                   </Card.Title>
                 </Card.Body>
               </Card>
-            </Box>
+            </CardDeck>
             <Button
               variant="contained"
               color="primary"
               className={clsx(classes.button, classes.refreshButton)}
               endIcon={<RefreshIcon>refresh</RefreshIcon>}
               onClick={covidDataAPIExec}
+              style={{ marginTop: "5px" }}
             >
               Refresh
             </Button>{" "}
@@ -294,36 +383,6 @@ export default function DashBoard(props) {
           successNotificationMessage={successNotificationMessage}
           failureNotificationMessage={failureNotificationMessage}
         />
-        {!statesView && (
-          <div className={clsx(classes.atBottom)} style={{ width: "100%" }}>
-            <AppBar position="static">
-              <Toolbar>
-                <Button color="inherit">
-                  {_.get(covidData, "lastUpdatedAtApify") &&
-                    `Last updated: ${moment(
-                      _.get(covidData, "lastUpdatedAtApify")
-                    ).format("MM/DD/YYYY hh:mm:ss A")} `}
-                </Button>
-                <Typography
-                  variant="h6"
-                  className={classes.title}
-                  align="center"
-                >
-                  Data Source:{" "}
-                  <a
-                    href="https://apify.com/covid-19"
-                    // eslint-disable-next-line react/jsx-no-target-blank
-                    target="_blank"
-                    style={{ color: "#fff" }}
-                  >
-                    https://apify.com/covid-19
-                  </a>
-                </Typography>
-                <AboutApp />
-              </Toolbar>
-            </AppBar>
-          </div>
-        )}
       </div>
     </React.Fragment>
   );
