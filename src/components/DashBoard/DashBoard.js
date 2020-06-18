@@ -285,7 +285,81 @@ export default function DashBoard(props) {
         )}
         {!statesView && (
           <>
-            <CardDeck style={{ width: "100%", marginLeft: "0px" }}>
+            <CardDeck style={{ width: "100%" }}>
+              <Card style={{ marginTop: "5px" }}>
+                <Card.Img
+                  variant="top"
+                  src="../covid.png"
+                  style={{ height: "250px" }}
+                />
+                <Card.Body>
+                  <Card.Title style={{ color: "blue", fontSize: "25px" }}>
+                    {_.get(covidData, "totalCases", 0).toLocaleString("en-IN")}
+                  </Card.Title>
+                  <Card.Text></Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <small className="text-muted" style={{ fontSize: "20px" }}>
+                    <strong>Total Cases</strong>
+                  </small>
+                </Card.Footer>
+              </Card>
+              <Card style={{ marginTop: "5px" }}>
+                <Card.Img
+                  variant="top"
+                  src="../covid.png"
+                  style={{ height: "250px" }}
+                />
+                <Card.Body>
+                  <Card.Title style={{ color: "blue", fontSize: "25px" }}>
+                    {_.get(covidData, "activeCases", 0).toLocaleString("en-IN")}
+                  </Card.Title>
+                  <Card.Text></Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <small className="text-muted" style={{ fontSize: "20px" }}>
+                    <strong>Active Cases</strong>
+                  </small>
+                </Card.Footer>
+              </Card>
+              <Card style={{ marginTop: "5px" }}>
+                <Card.Img
+                  variant="top"
+                  src="../covid.png"
+                  style={{ height: "250px" }}
+                />
+                <Card.Body>
+                  <Card.Title style={{ color: "blue", fontSize: "25px" }}>
+                    {_.get(covidData, "recovered", 0).toLocaleString("en-IN")}
+                  </Card.Title>
+                  <Card.Text></Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <small className="text-muted" style={{ fontSize: "20px" }}>
+                    <strong>Recovered Cases</strong>
+                  </small>
+                </Card.Footer>
+              </Card>
+              <Card style={{ marginTop: "5px" }}>
+                <Card.Img
+                  variant="top"
+                  src="../covid.png"
+                  style={{ height: "250px" }}
+                />
+                <Card.Body>
+                  <Card.Title style={{ color: "blue", fontSize: "25px" }}>
+                    {_.get(covidData, "deaths", 0).toLocaleString("en-IN")}
+                  </Card.Title>
+                  <Card.Text></Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <small className="text-muted" style={{ fontSize: "20px" }}>
+                    <strong>Death Cases</strong>
+                  </small>
+                </Card.Footer>
+              </Card>
+            </CardDeck>
+            {/* <CardDeck style={{ width: "100%", marginLeft: "0px" }}>
               <Card
                 bg="primary"
                 key={1}
@@ -360,7 +434,7 @@ export default function DashBoard(props) {
                   </Card.Title>
                 </Card.Body>
               </Card>
-            </CardDeck>
+            </CardDeck> */}
             <Button
               variant="contained"
               color="primary"
