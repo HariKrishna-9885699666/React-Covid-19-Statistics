@@ -126,7 +126,8 @@ export default function DashBoard(props) {
                         </Card.Text>
                       </Card.Body>
                     </Card>
-                    <Card style={{ marginTop: "5px" }}>
+                    {covidData?.regionData[loopIndex + 2] && (
+                      <Card style={{ marginTop: "5px" }}>
                       <Card.Img
                         variant="top"
                         src="../covid.png"
@@ -134,28 +135,28 @@ export default function DashBoard(props) {
                       />
                       <Card.Body>
                         <Card.Title style={{ color: "blue" }}>
-                          {covidData.regionData[loopIndex + 2].region}
+                          {covidData?.regionData[loopIndex + 2]?.region}
                         </Card.Title>
                         <Card.Text>
                           <Badge pill variant="danger">
                             Total Cases:{" "}
-                            {covidData.regionData[loopIndex + 2].totalCases}
+                            {covidData?.regionData[loopIndex + 2]?.totalCases}
                           </Badge>{" "}
                           <Badge pill variant="danger">
                             Total Infected:{" "}
-                            {covidData.regionData[loopIndex + 2].totalInfected}
+                            {covidData?.regionData[loopIndex + 2]?.totalInfected}
                           </Badge>{" "}
                           <Badge pill variant="danger">
                             Total Deceased:{" "}
-                            {covidData.regionData[loopIndex + 2].deceased}
+                            {covidData?.regionData[loopIndex + 2]?.deceased}
                           </Badge>{" "}
                           <Badge pill variant="danger">
                             Total Recovered:{" "}
-                            {covidData.regionData[loopIndex + 2].recovered}
+                            {covidData?.regionData[loopIndex + 2]?.recovered}
                           </Badge>{" "}
                         </Card.Text>
                       </Card.Body>
-                    </Card>
+                    </Card>)}
                   </CardDeck>
                 </div>
               );
