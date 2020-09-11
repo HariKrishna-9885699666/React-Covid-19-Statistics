@@ -77,10 +77,10 @@ export default function DashBoard(props) {
                           {covidData.regionData[loopIndex].region}
                         </Card.Title>
                         <Card.Text>
-                          <Badge pill variant="danger">
-                            Total Cases:{" "}
-                            {covidData.regionData[loopIndex].totalCases}
-                          </Badge>{" "}
+//                           <Badge pill variant="danger">
+//                             Total Cases:{" "}
+//                             {covidData.regionData[loopIndex].totalCases}
+//                           </Badge>{" "}
                           <Badge pill variant="danger">
                             Total Infected:{" "}
                             {covidData.regionData[loopIndex].totalInfected}
@@ -107,10 +107,10 @@ export default function DashBoard(props) {
                           {covidData.regionData[loopIndex + 1].region}
                         </Card.Title>
                         <Card.Text>
-                          <Badge pill variant="danger">
-                            Total Cases:{" "}
-                            {covidData.regionData[loopIndex + 1].totalCases}
-                          </Badge>{" "}
+//                           <Badge pill variant="danger">
+//                             Total Cases:{" "}
+//                             {covidData.regionData[loopIndex + 1].totalCases}
+//                           </Badge>{" "}
                           <Badge pill variant="danger">
                             Total Infected:{" "}
                             {covidData.regionData[loopIndex + 1].totalInfected}
@@ -138,10 +138,10 @@ export default function DashBoard(props) {
                           {covidData?.regionData[loopIndex + 2]?.region}
                         </Card.Title>
                         <Card.Text>
-                          <Badge pill variant="danger">
-                            Total Cases:{" "}
-                            {covidData?.regionData[loopIndex + 2]?.totalCases}
-                          </Badge>{" "}
+//                           <Badge pill variant="danger">
+//                             Total Cases:{" "}
+//                             {covidData?.regionData[loopIndex + 2]?.totalCases}
+//                           </Badge>{" "}
                           <Badge pill variant="danger">
                             Total Infected:{" "}
                             {covidData?.regionData[loopIndex + 2]?.totalInfected}
