@@ -18,12 +18,6 @@ function StateModal(props) {
       <Modal.Body>
         <p align="center">
           <Button variant="primary">
-            Total Cases{" "}
-            <Badge variant="light">{props.stateInfo.totalCases}</Badge>
-          </Button>
-          <br />
-          <br />
-          <Button variant="primary">
             Total Infected{" "}
             <Badge variant="warning">{props.stateInfo.totalInfected}</Badge>
           </Button>
