@@ -81,7 +81,7 @@ export default function Map(props) {
                     <area
                       shape="poly"
                       alt={item.region}
-                      coords={mapCo.codes}
+                      coords={mapCo?.codes}
                       onClick={(e) => {
                         e.preventDefault();
                         setModalShow(true);
